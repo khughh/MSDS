@@ -1,0 +1,94 @@
+-- Question1
+SELECT COUNT(INV_NUMBER) AS InvoiceCount
+FROM INVOICE;
+
+--Question 2
+SELECT COUNT(*) AS CustomerCount
+FROM CUSTOMER
+WHERE CUS_BALANCE > 500;
+
+--Question 3
+SELECT
+    C.CUS_CODE AS CustomerCode,
+    C.CUS_LNAME AS LastName,
+    C.CUS_FNAME AS FirstName,
+    I.INV_NUMBER AS InvoiceNumber,
+    I.INV_DATE AS InvoiceDate,
+    L.P_CODE AS ProductCode,
+    L.LINE_UNITS AS Quantity,
+    L.LINE_PRICE AS UnitPrice
+FROM
+    CUSTOMER AS C
+JOIN
+    INVOICE AS I
+ON
+    C.CUS_CODE = I.CUS_CODE
+JOIN
+    LINE AS L
+ON
+    I.INV_NUMBER = L.INV_NUMBER
+ORDER BY
+    C.CUS_CODE, I.INV_DATE;
+	
+-- Question 4
+SELECT
+    C.CUS_CODE AS CustomerCode,
+    C.CUS_LNAME AS LastName,
+    C.CUS_FNAME AS FirstName,
+    I.INV_NUMBER AS InvoiceNumber,
+    I.INV_DATE AS InvoiceDate,
+    L.LINE_NUMBER AS LineNumber,
+    P.P_CODE AS ProductCode,
+    P.P_DESCRIPT AS ProductDescription,
+    L.LINE_UNITS AS Quantity,
+    P.P_PRICE AS UnitPrice,
+    L.LINE_UNITS * P.P_PRICE AS Subtotal
+FROM
+    CUSTOMER AS C
+JOIN
+    INVOICE AS I
+ON
+    C.CUS_CODE = I.CUS_CODE
+JOIN
+    LINE AS L
+ON
+    I.INV_NUMBER = L.INV_NUMBER
+JOIN
+    PRODUCT AS P
+ON
+    L.P_CODE = P.P_CODE
+ORDER BY
+    C.CUS_CODE, I.INV_NUMBER, L.LINE_NUMBER;
+
+-- Question 5
+SELECT
+    C.CUS_CODE AS CustomerCode,
+    C.CUS_LNAME AS LastName,
+    C.CUS_FNAME AS FirstName,
+    C.CUS_BALANCE AS CurrentBalance
+FROM
+    CUSTOMER AS C
+WHERE
+    C.CUS_CODE IN (SELECT DISTINCT I.CUS_CODE FROM INVOICE AS I)
+ORDER BY
+    C.CUS_CODE;
+
+--Question 6
+SELECT
+    C.CUS_CODE AS CustomerCode,
+    C.CUS_LNAME AS LastName,
+    C.CUS_FNAME AS FirstName
+FROM
+    CUSTOMER AS C
+WHERE
+    C.CUS_CODE NOT IN (SELECT DISTINCT I.CUS_CODE FROM INVOICE AS I)
+ORDER BY
+    C.CUS_CODE;
+	
+-- Question 7
+SELECT
+    SUM(P.P_QOH * P.P_PRICE) AS TotalInventoryValue
+FROM
+    PRODUCT AS P;
+
+
